@@ -15,3 +15,8 @@ source install-Debian/tools.sh
 source install-Debian/check-ports.sh
 source install-Debian/install-preq.sh
 source install-Debian/install-app.sh
+
+sudo systemctl stop nginx.service
+sudo systemctl start postgresql.service 
+sudo systemctl start rabbitmq-server.service
+sudo systemctl start redis-server.service 

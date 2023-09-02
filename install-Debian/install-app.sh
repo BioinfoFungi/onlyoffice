@@ -75,6 +75,10 @@ if [ "$COMMUNITY_SERVER_INSTALLED" = "true" ]; then
 	MYSQL_SERVER_PASS=$(grep -oP "Password=[^\";]*" $DIR/web.connections.config | head -1 | cut -d'=' -f2);
 fi
 
+DS_JWT_ENABLED=${DS_JWT_ENABLED:-true};
+DS_JWT_SECRET="123456789" #"$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)";
+DS_JWT_HEADER="AuthorizationJwt";
+
 if [ "$INSTALLATION_TYPE" != "GROUPS" ] && [ "$DOCUMENT_SERVER_INSTALLED" = "false" ]; then
 	DS_PORT=${DS_PORT:-8083};
 
@@ -83,9 +87,7 @@ if [ "$INSTALLATION_TYPE" != "GROUPS" ] && [ "$DOCUMENT_SERVER_INSTALLED" = "fal
 	DS_DB_USER=$DS_COMMON_NAME;
 	DS_DB_PWD=$DS_COMMON_NAME;
 
-	DS_JWT_ENABLED=${DS_JWT_ENABLED:-true};
-	DS_JWT_SECRET="$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)";
-	DS_JWT_HEADER="AuthorizationJwt";
+
 	
 	if ! su - postgres -s /bin/bash -c "psql -lqt" | cut -d \| -f 1 | grep -q ${DS_DB_NAME}; then
 		su - postgres -s /bin/bash -c "psql -c \"CREATE USER ${DS_DB_USER} WITH password '${DS_DB_PWD}';\""
